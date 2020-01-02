@@ -1,0 +1,14 @@
+#!/bin/bash
+
+cd ~/cbin
+
+echo "Sliding conf and init files into place..."
+sudo cp crouton.conf /etc/init
+sudo cp crouton.init /usr/local
+
+printf "\e[31mLeaving dev_boot_signed_only unset! "
+printf "\e[0m(Because kernel repacked for VT_x.)\n"
+
+echo "Rebooting in 5 seconds..."
+sleep 5
+sudo reboot

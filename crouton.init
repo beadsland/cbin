@@ -1,0 +1,77 @@
+##############################################################
+## Place a '#' in the 1st column before the variable if you ##
+#+ don't want to change it from the crouton.conf defaults.  ##
+##############################################################
+
+###
+##########################################################################
+##* crouton.conf defaults are:                                          ##
+# DELAY=10            # delay desired number of seconds before starting ##
+# CHROOT=precise      # enter desired chroot to start                   ##
+# START_DE=startxfce4 # enter desired Desktop Envirnoment to use        ##
+# CHROOT_APP=none     # enter desired chroot application to run         ##
+# XMETHOD=default     # enter the desired XMETHOD (xorg,xephyr,xiwi)    ##
+# RUN_STATE=y         # change to 'n' to disable running $CHROOT        ##
+##########################################################################
+
+###
+### DELAY: change to desired number of seconds before starting
+##* It helps sometimes to give other applicaitons time to initialize.
+#--
+DELAY=5
+
+###
+### CHROOT: change to desired chroot to use
+#--
+##* chroot(s) in '/var/crouton/chroots': precise, trusty, wheezy-cb, mdwatson
+##! precise - DE:kde,xbmc
+#CHROOT=precise
+##! trusty - DE:gnome,kde,xfce,xbmc
+#CHROOT=trusty
+##! wheezy-cb - DE:xinit,startob
+#CHROOT=wheezy-cb
+##! mdwatson - DE:elementary
+#CHROOT=mdwatson
+CHROOT=xenial
+
+###
+### START_DE: change to desired Desktop Envirnoment to use
+#--
+#START_DE=startelementary
+#START_DE=startkde
+#START_DE=startlxde
+#START_DE=startgnome
+
+#START_DE=startunity
+#START_DE=/mnt/stateful_partition/crouton/shared/homebeads/bin/cbin/launch
+START_DE=/home/chronos/user/cbin/launchbye
+
+#START_DE=startxbmc
+#START_DE=startxfce4
+##! below 'enter-chroot' commonly used with 
+##! CHROOT_APP=sleep infinity (below) for headless operations.
+#START_DE=enter-chroot
+
+###
+### CHROOT_APP: enter a chroot application to run, used for startxiwi
+##* or enter-chroot, etc.
+#--
+#CHROOT_APP=pidgin
+#CHROOT_APP=skype
+#CHROOT_APP=xterm
+## below 'sleep infinity' commonly used with 
+## START_DE=enter-chroot (above) for headless operations, etc.
+#CHROOT_APP=sleep infinity
+
+###
+### XMETHOD: Override the default XMETHOD for this session - if installed
+#--
+#XMETHOD=default
+XMETHOD=xorg
+#XMETHOD=xephyr
+#XMETHOD=xiwi
+
+###
+### RUN_STATE: change to 'n' to disable running crouton.conf
+#--
+RUN_STATE=y

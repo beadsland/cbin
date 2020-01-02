@@ -1,0 +1,9 @@
+#!/bin/bash
+
+cd ~/cbin
+
+#echo "Change kernel flags (for virtualbox)..."
+#sudo ./change-kernel-flags
+
+echo "Removing rootfs verification (for auto-launch of crouton)... will reboot..."
+sudo ./rw-rootfs
