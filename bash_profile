@@ -3,7 +3,7 @@
 BRW="\e[33m"
 NCL="\e[0m"
 
-CHRX=/media/removable/chrubuntu
+CHRX=/media/removable/chrx
 DEVX=/dev/mmcblk0p7
 
 printf "${BRW}Confirming chrx volume is mounted and executable...${NCL}\n"
@@ -15,6 +15,12 @@ if ! grep -qs $CHRX /proc/mounts; then
   [ -e $CHRX ] || sudo mkdir $CHRX
   sudo mount $DEVX $CHRX
 fi
+
+# Add the following lines to /etc/rc.local to make the above useful:
+#
+#   mount --bind /media/removable/chrx/crouton/homebeads /home/beads
+#   mount /home/beads -o remount,exec
+#
 
 # This file is sourced by bash for login shells.  The following line
 # runs your .bashrc and is recommended by the bash info pages.

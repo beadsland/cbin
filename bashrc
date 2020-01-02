@@ -5,6 +5,7 @@
 # that can't tolerate any output.  So make sure this doesn't display
 # anything or bad things will happen !
 
+CHRX=/media/removable/chrx
 
 # Test for an interactive shell.  There is no need to set anything
 # past this point for scp and rcp, and it's important to refrain from
@@ -16,7 +17,7 @@ fi
 
 
 # Make for a more powerful crosh.
-source /media/removable/chrubuntu/crouton/homebeads/bin/cbin/setup.sh
+source $CHRX/crouton/homebeads/bin/cbin/setup.sh
 PATH=~/cbin:$PATH
 
 alias go="sudo ~/cbin/launch"

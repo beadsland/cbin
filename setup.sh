@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 HOME=/home/chronos/user
-CHRX=/media/removable/chrubuntu
+CHRX=/media/removable/chrx
 CBIN=$CHRX/crouton/homebeads/bin/cbin
 
 printf "${BRW}Confirming cbin is mounted and executable...${NCL}\n"
