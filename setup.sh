@@ -21,5 +21,9 @@ cp $CBIN/bash_profile $HOME/.bash_profile # We can't rely on softlink if DEVX un
 rm $HOME/.bashrc
 ln -s $CBIN/bashrc $HOME/.bashrc
 
-#printf "${BRW}Preparing shill to let openvpn live ${NCL}...\n"
+printf "${BRW}Preparing shill to let openvpn live ${NCL}...\n"
 $HOME/cbin/prepvpn
+
+printf "${BRW}Confirming crouton is current and installed...${NCL}\n"
+curl  -Lo ~/Downloads/crouton https://goo.gl/fd3zc
+sudo install -Dt /usr/local/bin -m 755 ~/Downloads/crouton
