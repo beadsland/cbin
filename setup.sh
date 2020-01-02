@@ -1,20 +1,23 @@
 #!/usr/bin/env bash
 
-BRW="\e[33m"
-NCL="\e[0m"
-
 HOME=/home/chronos/user
-CBIN=/media/removable/chrubuntu/crouton/homebeads/bin/cbin
+CHRX=/media/removable/chrubuntu
+CBIN=$CHRX/crouton/homebeads/bin/cbin
 
 printf "${BRW}Confirming cbin is mounted and executable...${NCL}\n"
-if ! grep -qs '/mnt/foo' /proc/mounts; then
+
+if ! grep -qs "$HOME/cbin" /proc/mounts; then
   [ -e $HOME/cbin ] || sudo mkdir $HOME/cbin
   sudo mount --bind $CBIN $HOME/cbin
 fi
+
 sudo mount $HOME/cbin -o remount,exec
 
 printf "${BRW}Relinking bashrc ${NCL}(just to be sure)...\n"
 cd $HOME
+
+rm $HOME/.bash_profile
+cp $CBIN/bash_profile $HOME/.bash_profile # We can't rely on softlink if DEVX unmounted
 rm $HOME/.bashrc
 ln -s $CBIN/bashrc $HOME/.bashrc
 
