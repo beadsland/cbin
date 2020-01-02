@@ -1,2 +1,5 @@
-*.bak
 *.ovpn
+semaphore
+
+*.bak
+*.save

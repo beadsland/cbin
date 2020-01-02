@@ -1,0 +1,63 @@
+#!/bin/bash -e
+
+DIR=$(dirname "$0")
+if [ -e $DIR/dontgo ] ; then
+  echo "flag: dontgo: exiting";
+  exit 1
+fi
+
+START=/home/chronos/user/cbin/xorg
+ROOTUID="0"
+
+FLAG=/home/chronos/user/cbin/semaphore
+
+sudo rm $FLAG
+if [ "$1" == "bye" ]; then
+  echo "bye" > $FLAG
+else
+  echo "hi" > $FLAG
+fi
+
+
+GRN='\033[0;32m'
+RED='\033[0;31m'
+NC='\033[0m'
+
+if [ "$(id -u)" -ne "$ROOTUID" ] ; then
+  echo "This script must be executed with root privileges."
+  exit 1
+else
+  printf $GRN
+  echo 1 >/var/lib/power_manager/disable_idle_suspend
+  echo 0 >/var/lib/power_manager/use_lid
+  ( (status powerd | fgrep -q "start/running" ) && restart powerd ) || \
+  start powerd
+  echo "Disabled idle/lid suspend"
+
+  echo "Running VPN"
+  $DIR/dropvpn; $DIR/runvpn
+
+#  echo "Remounting microSD"
+#  mount -o remount,exec /media/removable/microSD || die "Failed to remount!"
+#  printf $NC
+
+  #change this with the command you start your chroot with
+  $START $@ || true # ignore any failures here so fix executes
+
+  echo "wellnow!" >> $FLAG
+
+  if [ "$1" == "bye" ]; then sudo poweroff; fi
+
+  printf $GRN
+  rm -f /var/lib/power_manager/disable_idle_suspend
+  rm -f /var/lib/power_manager/use_lid
+  ( (status powerd | fgrep -q "start/running" ) && restart powerd ) || \
+  start powerd
+  echo "Enabled idle/lid suspend"
+  printf $NC
+
+  printf $GRN
+  echo "Re-running VPN"
+  printf $NC
+  $DIR/dropvpn; $DIR/runvpn
+fi

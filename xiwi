@@ -1,0 +1,4 @@
+#!/bin/bash
+
+if [ "$1" == "bye" ]; then sudo shutdown; fi
+sudo startxfce4 -n bionic -X xiwi "$@"
