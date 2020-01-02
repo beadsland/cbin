@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+CHRX=/media/removable/chrx
+BACK=/media/removable/microSD/back
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+
+cd $CHRX
+sudo $DIR/tarball -t crouton/homebeads -d $BACK

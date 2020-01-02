@@ -1,0 +1,103 @@
+#!/usr/bin/env bash
+
+# Copyright 2017 Beads Land-Trujillo
+
+#
+# Show how to use this command.
+#
+show_usage() {
+  cat << EOU
+Usage: $(basename $0) [options]
+
+Options:
+
+  --target
+  -t  Target directory. (Defaults to .)
+
+  --destination
+  -d  Destination directory for tarball file. (Defaults to ~)
+
+  --name
+  -n  Name prefix for output file. Full output will be of the form
+      "NAME_DATESTAMP.tgz". (Defaults to target directory name.)
+
+  --option
+  -o  Option to pass to tar. Multiple options may be supplied by supplying
+      a quoted string or else by multiple invocations of -o.
+
+  --exclude
+  -e  Colon delimited list of relative paths to exclude. Each expands to
+      "--exclude PATH" on the tar command line. Multiple invocations allowed.
+EOU
+
+  exit 1
+}
+
+#
+# Read command line options
+#
+OPTIONS=()
+while [[ "$#" -gt 0 ]]; do
+  case "$1" in
+    -t|--target)
+      if [ -z "$TARGET" ]; then TARGET="$2"; else show_usage; fi
+    ;;
+    -d|--destintation)
+      if [ -z "$DESTIN" ]; then DESTIN="$2"; else show_usage; fi
+    ;;
+    -n|--name)
+      if [ -z "$NAME" ]; then NAME="$2"; else show_usage; fi
+    ;;
+    -o|--option)
+      OPTIONS+=("$2")
+    ;;
+    -e|--exclude)
+      EXCLUDE="$EXCLUDE:$2"
+    ;;
+    *)
+      show_usage
+    ;;
+  esac
+
+  shift; shift
+done
+
+#
+# Set things up.
+#
+TARGET="${TARGET:-.}"
+DESTIN="${DESTIN:-$HOME}"
+
+BASE=`cd "$TARGET" && pwd -P`
+BASE=`basename $BASE`
+
+[ -z "$NAME" ] && NAME="$BASE"
+
+DATE=`date +%Y%m%d_%H%M%S`
+FILE="${NAME}_${DATE}.tgz"
+while IFS=':' read -ra EX; do
+  for i in "${EX[@]}"; do
+    i=$(echo $i | sed 's/ /\ /g')
+    if [ ! -z "$i" ]; then OPTIONS+=("--exclude=$i"); fi
+  done
+done <<< "$EXCLUDE"
+
+doerr() {
+  while read l; do echo -e "\e[3A\e[K\e[0;31m$l         \e[0m…\e[2B" >&2; done
+}
+dotar() { tar -cf - "${@:2}" 2> >(doerr) | (sleep 1; pv -i0.1 -s $1 -cN tar) }
+dozip() { gzip 2> >(doerr) | (sleep 2; pv -i0.1 -cN gzip > "$1") }
+dodu()  { du -sbx "$@"; 2> >(doerr); }
+
+#
+# Do our thing
+#
+>&2 echo -e '\e[2m[Errors, if any, will appear hereabouts]\e[0m' # Once.
+>&2 echo -e '\e[2m[Errors, if any, will appear hereabouts]\e[0m' # Twice.
+
+
+SIZE=$(dodu "${OPTIONS[@]}" "$TARGET" | head -1 | awk '{ print $1 }')
+RESULT="$DESTIN/$FILE"
+
+(dotar $SIZE "${OPTIONS[@]}" "$TARGET" | dozip "$RESULT") \
+	&& echo -e "\nResult: $RESULT"
