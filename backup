@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+cd /media/removable/microSD/back
+sudo edit-chroot -b bionic && (cd ~/cbin; sudo ./launch)
+cd ~
