@@ -1,0 +1,23 @@
+#!/bin/bash
+
+OVPN="beadsland.ovpn"
+
+if [[ $EUID > 0 ]]; then # we can compare directly with this syntax.
+  echo "Please run as root/sudo"
+  exit 1
+fi
+
+PATH="/home/beads/bin/cbin:$PATH"
+DIR=$(dirname "$0")
+NAMESERVER="\nnameserver 192.168.2.1\nnameserver 192.168.42.1\nnameserver 8.8.8.8\nsearch home."
+
+openvpn --mktun --dev tun0
+# Add google DNS on top of current ones, since openvpn command does not do it
+sed -i "1s/^/# new DNS${NAMESERVER}\n# old DNS\n/" /var/run/shill/resolv.conf &> /dev/null
+sed -i "1s/^/# new DNS${NAMESERVER}\n# old DNS\n/" /etc/resolv.conf &> /dev/null
+
+# Lauch openvpn, finally...
+openvpn --config $DIR/$OVPN --dev tun0 --mute-replay-warnings 2>&1 | head -n 15 &
+#echo $! > /home/chronos/user/Downloads/.openvpn.pid
+
+sleep 5

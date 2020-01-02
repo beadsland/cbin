@@ -1,0 +1,15 @@
+#!/bin/bash
+
+#if [[ $EUID > 0 ]]; then # we can compare directly with this syntax.
+#  echo "Please run as root/sudo"
+#  exit 1
+#fi
+
+# Run by our boot script, so always gonna be root
+
+#Allows the tun0 device to function
+sudo stop shill
+sudo start shill BLACKLISTED_DEVICES=tun0
+
+# Sleep 10 seconds to allow chromebook to reconnect to the network
+sudo sleep 5

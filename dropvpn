@@ -1,0 +1,13 @@
+#!/bin/bash
+
+if [[ $EUID > 0 ]]; then # we can compare directly with this syntax.
+  echo "Please run as root/sudo"
+  exit 1
+fi
+
+# remove tun0 and cleanup the DNS
+
+pkill openvpn
+openvpn --rmtun --dev tun0
+sed -i '/# new DNS/,/# old DNS/d' /etc/resolv.conf &> /dev/null
+sed -i '/# new DNS/,/# old DNS/d' /var/run/shill/resolv.conf &> /dev/null
