@@ -19,7 +19,6 @@ fi
 # Add the following lines to /etc/rc.local to make the above useful:
 #
 #   mount --bind /media/removable/chrx/crouton/homebeads /home/beads
-#   mount /home/beads -o remount,exec
 #
 
 # This file is sourced by bash for login shells.  The following line
